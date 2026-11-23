@@ -2,6 +2,10 @@
 
 **Klasik Reflü (GERD) ve Sessiz Reflü (LPR) için Klinik Kılavuz Odaklı, Halüsinasyonsuz Kişisel Takip Rehberi**
 
+[![Canlı Demo](https://img.shields.io/badge/Canl%C4%B1%20Demo-reflu--rehberi--nu.vercel.app-1D6FD6?style=for-the-badge)](https://reflu-rehberi-nu.vercel.app)
+
+**Canlı Uygulama:** https://reflu-rehberi-nu.vercel.app
+
 ReflüRehber; mide yanması/ekşimesi gibi klasik reflü (**GERD**) belirtileri ile ses kısıklığı, boğazda gıcık, sık boğaz temizleme ve geniz akıntısı gibi sessiz reflü (**LPR**) belirtilerini birlikte takip etmeyi kolaylaştıran, genel klinik uzlaşıyı kişisel gözlemlerden şeffaf biçimde ayıran modern bir web uygulamasıdır.
 
 > **Tıbbi Bilgilendirme Notu:** ReflüRehber tıbbi tavsiye, teşhis veya tedavi önerisi sunmaz. Yalnızca kişisel öğün, alışkanlık ve belirti gözlemlerinizi düzenli tutmanız ve hekim görüşmelerinize hazırlanmanız için geliştirilmiş bir takip günlüğüdür.

@@ -19,7 +19,11 @@ export const AppSidebar = memo(function AppSidebar({
       aria-label="Ana gezinme"
       className="no-print hidden lg:flex lg:flex-col lg:w-[248px] lg:fixed lg:inset-y-0 bg-white border-r border-[#DCE7F3]"
     >
-      <div className="px-6 h-16 flex items-center gap-2.5 border-b border-[#E6EFF8]">
+      <button
+        type="button"
+        onClick={() => onSelectTab('dashboard')}
+        className="px-6 h-16 flex items-center gap-2.5 border-b border-[#E6EFF8] text-left hover:bg-[#F7FBFF] transition-colors cursor-pointer"
+      >
         <img
           src="/app-icon.png"
           alt="ReflüRehber"
@@ -30,7 +34,7 @@ export const AppSidebar = memo(function AppSidebar({
         <span className="font-display text-[17px] font-bold tracking-tight text-[#0F233A] whitespace-nowrap">
           ReflüRehber
         </span>
-      </div>
+      </button>
 
       <nav className="flex-1 px-3 py-5 space-y-1 overflow-y-auto">
         {NAV_ITEMS.map((item) => {

@@ -27,6 +27,12 @@ import {
 
 export type ToastVariant = 'info' | 'reminder' | 'success' | 'warning' | 'error';
 
+export interface ToastAction {
+  label: string;
+  onClick: () => void | Promise<void>;
+  tone?: 'primary' | 'danger' | 'secondary';
+}
+
 export interface ToastInput {
   title: string;
   description?: string;
@@ -34,8 +40,10 @@ export interface ToastInput {
   durationMs?: number;
   /** When true, mirrors this important alert/reminder to a native Browser Notification if permission is granted. */
   browserAlert?: boolean;
-  /** Optional deduplication tag for native Browser Notifications. */
+  /** Optional deduplication tag (replaces any visible toast with the same tag). */
   tag?: string;
+  /** Optional inline action buttons (e.g. confirmation prompts). */
+  actions?: ToastAction[];
 }
 
 interface ToastItem
@@ -43,6 +51,8 @@ interface ToastItem
   id: string;
   description?: string;
   mirroredToBrowser?: boolean;
+  tag?: string;
+  actions?: ToastAction[];
 }
 
 interface ToastContextValue {
@@ -107,6 +117,13 @@ const VARIANT_STYLES: Record<
   },
 };
 
+const ACTION_TONE_CLASSES: Record<NonNullable<ToastAction['tone']>, string> = {
+  primary: 'bg-[#1D6FD6] text-white hover:bg-[#1659B3]',
+  danger: 'bg-[#B91C1C] text-white hover:bg-[#991B1B]',
+  secondary:
+    'border border-[#DCE7F3] bg-white text-[#455D75] hover:text-[#0F233A] hover:bg-[#F4F8FC]',
+};
+
 const ToastCard = memo(function ToastCard({
   item,
   onDismiss,
@@ -169,11 +186,12 @@ const ToastCard = memo(function ToastCard({
 
   const style = VARIANT_STYLES[item.variant];
   const Icon = style.Icon;
+  const hasActions = Boolean(item.actions && item.actions.length > 0);
 
   return (
     <div
-      role={item.variant === 'error' ? 'alert' : 'status'}
-      aria-live={item.variant === 'error' ? 'assertive' : 'polite'}
+      role={item.variant === 'error' || hasActions ? 'alert' : 'status'}
+      aria-live={item.variant === 'error' || hasActions ? 'assertive' : 'polite'}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       data-testid="app-toast"
@@ -190,7 +208,7 @@ const ToastCard = memo(function ToastCard({
         <Icon className="w-4 h-4" aria-hidden="true" />
       </div>
 
-      <div className="min-w-0 flex-1 space-y-0.5">
+      <div className="min-w-0 flex-1 space-y-1">
         {(style.kicker || item.mirroredToBrowser) && (
           <div className="flex items-center gap-1.5 text-[11px] font-semibold">
             {style.kicker && (
@@ -215,6 +233,25 @@ const ToastCard = memo(function ToastCard({
           <p className="text-xs text-[#455D75] leading-relaxed">
             {item.description}
           </p>
+        )}
+        {hasActions && (
+          <div className="flex flex-wrap items-center gap-2 pt-2">
+            {item.actions!.map((action) => (
+              <button
+                key={action.label}
+                type="button"
+                onClick={() => {
+                  triggerExit();
+                  void action.onClick();
+                }}
+                className={`inline-flex items-center justify-center min-h-8 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap cursor-pointer ${
+                  ACTION_TONE_CLASSES[action.tone ?? 'secondary']
+                }`}
+              >
+                {action.label}
+              </button>
+            ))}
+          </div>
         )}
       </div>
 
@@ -254,11 +291,14 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
   const notify = useCallback((input: ToastInput) => {
     const variant: ToastVariant = input.variant ?? 'info';
+    const hasActions = Boolean(input.actions && input.actions.length > 0);
     const durationMs =
       input.durationMs ??
-      (variant === 'error' || variant === 'warning' || variant === 'reminder'
-        ? 6000
-        : 4000);
+      (hasActions
+        ? 9000
+        : variant === 'error' || variant === 'warning' || variant === 'reminder'
+          ? 6000
+          : 4000);
     const id = createId('toast');
 
     let mirroredToBrowser = false;
@@ -271,6 +311,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     }
 
     setToasts((prev) => {
+      const filtered = input.tag
+        ? prev.filter((t) => t.tag !== input.tag)
+        : prev;
       const next: ToastItem = {
         id,
         title: input.title,
@@ -278,8 +321,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         variant,
         durationMs,
         mirroredToBrowser,
+        tag: input.tag,
+        actions: input.actions,
       };
-      return [...prev, next].slice(-MAX_VISIBLE_TOASTS);
+      return [...filtered, next].slice(-MAX_VISIBLE_TOASTS);
     });
   }, []);
 

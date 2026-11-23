@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import type { User } from 'firebase/auth';
-import { Database, Eye, LogIn, LogOut, UserPlus, X } from 'lucide-react';
+import { ArrowLeft, Eye, LogIn, LogOut, UserPlus } from 'lucide-react';
 import type { AuthModalMode } from '../AuthModal';
 
 interface AppHeaderProps {
@@ -8,23 +8,26 @@ interface AppHeaderProps {
   readabilityMode: boolean;
   onToggleReadability: () => void;
   isDemoPreview: boolean;
-  onToggleDemo: () => void;
-  authReady: boolean;
+  onExitDemo: () => void;
   user: User | null;
   onOpenAuth: (mode?: AuthModalMode) => void;
-  onSignOut: () => void;
+  onRequestSignOut: () => void;
 }
 
+/**
+ * Authenticated & Demo-preview workspace top bar.
+ * Keeps controls focused on the active session (readability, account/logout,
+ * or exiting temporary demo preview back to the landing page).
+ */
 export const AppHeader = memo(function AppHeader({
   currentLabel,
   readabilityMode,
   onToggleReadability,
   isDemoPreview,
-  onToggleDemo,
-  authReady,
+  onExitDemo,
   user,
   onOpenAuth,
-  onSignOut,
+  onRequestSignOut,
 }: AppHeaderProps) {
   const userInitial =
     user?.displayName?.trim().charAt(0).toUpperCase() ||
@@ -53,6 +56,11 @@ export const AppHeader = memo(function AppHeader({
         <span className="hidden lg:inline text-sm font-medium text-[#0F233A] truncate">
           {currentLabel}
         </span>
+        {isDemoPreview && !user && (
+          <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-md bg-[#EBF4FF] border border-[#CBE0FA] text-[11px] font-semibold text-[#155CC0] whitespace-nowrap">
+            Örnek Önizleme
+          </span>
+        )}
       </div>
 
       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
@@ -84,56 +92,45 @@ export const AppHeader = memo(function AppHeader({
           <span className="sm:hidden">Okuma</span>
         </button>
 
-        <button
-          type="button"
-          onClick={onToggleDemo}
-          className={`hidden md:inline-flex items-center justify-center gap-1.5 min-h-9 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors whitespace-nowrap cursor-pointer ${
-            isDemoPreview
-              ? 'border-[#BBD6F7] bg-[#EBF4FF] text-[#155CC0] hover:bg-[#DCEBFE]'
-              : 'border-[#DCE7F3] bg-white text-[#455D75] hover:text-[#0F233A] hover:bg-[#F4F8FC]'
-          }`}
-        >
-          {isDemoPreview ? (
-            <>
-              <X className="w-3.5 h-3.5" aria-hidden="true" />
-              Önizlemeyi Kapat
-            </>
-          ) : (
-            <>
-              <Database className="w-3.5 h-3.5 text-[#1D6FD6]" aria-hidden="true" />
-              Örnek Önizle
-            </>
-          )}
-        </button>
-
-        {authReady && user ? (
+        {user ? (
           <div className="flex items-center gap-1.5 sm:gap-2 sm:pl-2 sm:border-l sm:border-[#E6EFF8]">
             <div className="hidden sm:flex items-center gap-2">
               <span className="w-7 h-7 rounded-full bg-[#EBF4FF] text-[#155CC0] text-xs font-semibold flex items-center justify-center shrink-0">
                 {userInitial}
               </span>
-              <span className="text-xs font-medium text-[#0F233A] max-w-[140px] truncate">
+              <span className="text-xs font-medium text-[#0F233A] max-w-[150px] truncate">
                 {user.displayName || user.email || 'Hesabım'}
               </span>
             </div>
             <button
               type="button"
-              onClick={onSignOut}
+              onClick={onRequestSignOut}
               aria-label="Çıkış Yap"
-              className="inline-flex items-center justify-center gap-1.5 min-h-9 px-2.5 sm:px-3 py-1.5 rounded-lg border border-[#DCE7F3] bg-white text-xs font-medium text-[#455D75] hover:text-[#0F233A] hover:bg-[#F4F8FC] transition-colors whitespace-nowrap cursor-pointer"
+              className="inline-flex items-center justify-center gap-1.5 min-h-9 px-2.5 sm:px-3 py-1.5 rounded-lg border border-[#DCE7F3] bg-white text-xs font-medium text-[#455D75] hover:text-[#B91C1C] hover:border-[#FECACA] hover:bg-[#FEF2F2] transition-colors whitespace-nowrap cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-              <span className="hidden xs:inline sm:inline">Çıkış Yap</span>
+              <span>Çıkış Yap</span>
             </button>
           </div>
         ) : (
           <div className="flex items-center gap-1.5 sm:gap-2">
+            {isDemoPreview && (
+              <button
+                type="button"
+                onClick={onExitDemo}
+                className="inline-flex items-center justify-center gap-1.5 min-h-9 px-2.5 sm:px-3 py-1.5 rounded-lg border border-[#DCE7F3] bg-white text-xs font-medium text-[#455D75] hover:text-[#0F233A] hover:bg-[#F4F8FC] transition-colors whitespace-nowrap cursor-pointer"
+              >
+                <ArrowLeft className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                <span className="hidden sm:inline">Tanıtım Sayfası</span>
+                <span className="sm:hidden">Çık</span>
+              </button>
+            )}
             <button
               type="button"
               onClick={() => onOpenAuth('register')}
-              className="hidden sm:inline-flex items-center justify-center gap-1.5 min-h-9 px-3 py-1.5 rounded-lg border border-[#DCE7F3] bg-white text-xs font-medium text-[#0F233A] hover:bg-[#F4F8FC] transition-colors whitespace-nowrap cursor-pointer"
+              className="hidden sm:inline-flex items-center justify-center gap-1.5 min-h-9 px-3 py-1.5 rounded-lg border border-[#BBD6F7] bg-[#F0F7FF] text-xs font-medium text-[#155CC0] hover:bg-[#E2EEF9] transition-colors whitespace-nowrap cursor-pointer"
             >
-              <UserPlus className="w-3.5 h-3.5 text-[#1D6FD6]" aria-hidden="true" />
+              <UserPlus className="w-3.5 h-3.5" aria-hidden="true" />
               Kaydol
             </button>
             <button
