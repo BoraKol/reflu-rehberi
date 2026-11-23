@@ -11,16 +11,20 @@ import {
   FileText,
   Lock,
   LogIn,
+  Moon,
   PenLine,
   Search,
   ShieldCheck,
   Sparkles,
+  Sun,
   UserPlus,
 } from 'lucide-react';
 import type { ActiveTab } from '../../types/reflux';
 import type { AuthModalMode } from '../AuthModal';
 
 interface LandingPageProps {
+  isDarkMode: boolean;
+  onToggleTheme: () => void;
   readabilityMode: boolean;
   onToggleReadability: () => void;
   onOpenAuth: (mode?: AuthModalMode) => void;
@@ -140,6 +144,8 @@ const PREVIEW_DAYS = [
 ] as const;
 
 export const LandingPage = memo(function LandingPage({
+  isDarkMode,
+  onToggleTheme,
   readabilityMode,
   onToggleReadability,
   onOpenAuth,
@@ -183,6 +189,22 @@ export const LandingPage = memo(function LandingPage({
           </nav>
 
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={onToggleTheme}
+              aria-pressed={isDarkMode}
+              aria-label={isDarkMode ? 'Aydınlık moda geç' : 'Karanlık moda geç'}
+              title={isDarkMode ? 'Aydınlık Mod' : 'Karanlık Mod'}
+              className="inline-flex items-center justify-center gap-1.5 min-h-9 min-w-9 px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-medium border border-[#DCE7F3] bg-white text-[#455D75] hover:text-[#0F233A] hover:bg-[#F4F8FC] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+            >
+              {isDarkMode ? (
+                <Sun className="w-4 h-4 text-[#FBBF24] shrink-0" aria-hidden="true" />
+              ) : (
+                <Moon className="w-4 h-4 text-[#1D6FD6] shrink-0" aria-hidden="true" />
+              )}
+              <span className="hidden xl:inline">{isDarkMode ? 'Aydınlık' : 'Karanlık'}</span>
+            </button>
+
             <button
               type="button"
               onClick={onToggleReadability}

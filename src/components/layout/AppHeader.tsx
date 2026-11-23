@@ -1,10 +1,12 @@
 import { memo } from 'react';
 import type { User } from 'firebase/auth';
-import { ArrowLeft, Eye, LogIn, LogOut, UserPlus } from 'lucide-react';
+import { ArrowLeft, Eye, LogIn, LogOut, Moon, Sun, UserPlus } from 'lucide-react';
 import type { AuthModalMode } from '../AuthModal';
 
 interface AppHeaderProps {
   currentLabel: string;
+  isDarkMode: boolean;
+  onToggleTheme: () => void;
   readabilityMode: boolean;
   onToggleReadability: () => void;
   isDemoPreview: boolean;
@@ -16,11 +18,13 @@ interface AppHeaderProps {
 
 /**
  * Authenticated & Demo-preview workspace top bar.
- * Keeps controls focused on the active session (readability, account/logout,
+ * Keeps controls focused on the active session (theme, readability, account/logout,
  * or exiting temporary demo preview back to the landing page).
  */
 export const AppHeader = memo(function AppHeader({
   currentLabel,
+  isDarkMode,
+  onToggleTheme,
   readabilityMode,
   onToggleReadability,
   isDemoPreview,
@@ -64,6 +68,22 @@ export const AppHeader = memo(function AppHeader({
       </div>
 
       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <button
+          type="button"
+          onClick={onToggleTheme}
+          aria-pressed={isDarkMode}
+          aria-label={isDarkMode ? 'Aydınlık moda geç' : 'Karanlık moda geç'}
+          title={isDarkMode ? 'Aydınlık Mod' : 'Karanlık Mod'}
+          className="inline-flex items-center justify-center gap-1.5 min-h-9 min-w-9 px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-medium border border-[#DCE7F3] bg-white text-[#455D75] hover:text-[#0F233A] hover:bg-[#F4F8FC] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+        >
+          {isDarkMode ? (
+            <Sun className="w-4 h-4 text-[#FBBF24] shrink-0" aria-hidden="true" />
+          ) : (
+            <Moon className="w-4 h-4 text-[#1D6FD6] shrink-0" aria-hidden="true" />
+          )}
+          <span className="hidden xl:inline">{isDarkMode ? 'Aydınlık' : 'Karanlık'}</span>
+        </button>
+
         <button
           type="button"
           onClick={onToggleReadability}

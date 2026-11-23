@@ -174,6 +174,272 @@ html[data-readability="high"] :is(button, a, input, textarea, select, [tabindex]
   outline-offset: 2px;
 }
 
+/* ============================================================================
+   Dark Mode (Clinical Deep Navy Palette — Accessible & Calm for Night Use)
+   ============================================================================ */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  background-color: #0B1524;
+  color: #EDF4FC;
+}
+
+html[data-theme="dark"] body {
+  background-color: #0B1524;
+  color: #EDF4FC;
+}
+
+/* Page & subtle canvas backgrounds */
+html[data-theme="dark"] .bg-\[\#F4F8FC\],
+html[data-theme="dark"] .bg-\[\#FAFBFD\],
+html[data-theme="dark"] .bg-\[\#F8FBFE\] {
+  background-color: #0B1524;
+}
+
+html[data-theme="dark"] .bg-white {
+  background-color: #111F33;
+}
+
+html[data-theme="dark"] .bg-white\/95 {
+  background-color: rgba(17, 31, 51, 0.94);
+}
+
+html[data-theme="dark"] .bg-white\/80 {
+  background-color: rgba(17, 31, 51, 0.85);
+}
+
+html[data-theme="dark"] .bg-\[\#F7FBFF\],
+html[data-theme="dark"] .bg-\[\#F0F6FC\],
+html[data-theme="dark"] .bg-\[\#F0F7FF\],
+html[data-theme="dark"] .bg-\[\#F1F5F9\] {
+  background-color: #15253D;
+}
+
+html[data-theme="dark"] .bg-\[\#EBF4FF\],
+html[data-theme="dark"] .bg-\[\#EBF2F9\],
+html[data-theme="dark"] .bg-\[\#E2EEF9\],
+html[data-theme="dark"] .bg-\[\#DCE7F3\] {
+  background-color: #1B3150;
+}
+
+html[data-theme="dark"] .from-white {
+  --tw-gradient-from: #111F33;
+}
+
+html[data-theme="dark"] .via-\[\#F7FBFF\] {
+  --tw-gradient-via: #0E1B2E;
+}
+
+html[data-theme="dark"] .to-\[\#F4F8FC\] {
+  --tw-gradient-to: #0B1524;
+}
+
+/* Semantic tinted surfaces in Dark Mode */
+html[data-theme="dark"] .bg-\[\#ECFDF5\],
+html[data-theme="dark"] .bg-\[\#ECFDF5\]\/60,
+html[data-theme="dark"] .bg-\[\#F0FDF4\] {
+  background-color: #0D2D26;
+}
+
+html[data-theme="dark"] .bg-\[\#FFFBEB\],
+html[data-theme="dark"] .bg-\[\#FFFDF7\] {
+  background-color: #2B200B;
+}
+
+html[data-theme="dark"] .bg-\[\#FEF2F2\],
+html[data-theme="dark"] .bg-\[\#FEF2F2\]\/50,
+html[data-theme="dark"] .bg-\[\#FEF2F2\]\/60 {
+  background-color: #2D1419;
+}
+
+/* Borders & dividers */
+html[data-theme="dark"] .border-\[\#DCE7F3\],
+html[data-theme="dark"] .border-\[\#E6EFF8\],
+html[data-theme="dark"] .border-\[\#E2EEF9\],
+html[data-theme="dark"] .border-\[\#EEF4FA\],
+html[data-theme="dark"] .divide-\[\#E6EFF8\] > :not(:last-child),
+html[data-theme="dark"] .divide-\[\#DCE7F3\] > :not(:last-child) {
+  border-color: #223754;
+}
+
+html[data-theme="dark"] .border-\[\#C6D9ED\],
+html[data-theme="dark"] .border-\[\#CBE0FA\],
+html[data-theme="dark"] .border-\[\#BBD6F7\] {
+  border-color: #2C486E;
+}
+
+html[data-theme="dark"] .border-\[\#DCFCE7\],
+html[data-theme="dark"] .border-\[\#B7EBD6\],
+html[data-theme="dark"] .border-\[\#A7F3D0\] {
+  border-color: #195244;
+}
+
+html[data-theme="dark"] .border-\[\#FEF3C7\],
+html[data-theme="dark"] .border-\[\#FDE2A7\],
+html[data-theme="dark"] .border-\[\#F3E2C7\] {
+  border-color: #5C4315;
+}
+
+html[data-theme="dark"] .border-\[\#FEE2E2\],
+html[data-theme="dark"] .border-\[\#FECACA\] {
+  border-color: #6B232E;
+}
+
+html[data-theme="dark"] .border-\[\#0F233A\] {
+  border-color: #3B5B87;
+}
+
+html[data-theme="dark"] .ring-\[\#CBE0FA\] {
+  --tw-ring-color: #2C486E;
+}
+
+/* Text ramp */
+html[data-theme="dark"] .text-\[\#0F233A\] {
+  color: #EDF4FC;
+}
+
+html[data-theme="dark"] .text-\[\#334155\],
+html[data-theme="dark"] .text-\[\#455D75\],
+html[data-theme="dark"] .text-\[\#4A627A\],
+html[data-theme="dark"] .text-\[\#475569\] {
+  color: #B6C8DD;
+}
+
+html[data-theme="dark"] .text-\[\#688099\],
+html[data-theme="dark"] .text-\[\#8BA0B5\],
+html[data-theme="dark"] .text-\[\#9DB2C7\] {
+  color: #89A3BF;
+}
+
+html[data-theme="dark"] .text-\[\#CBD5E1\] {
+  color: #365074;
+}
+
+html[data-theme="dark"] .text-\[\#155CC0\],
+html[data-theme="dark"] .text-\[\#1D6FD6\] {
+  color: #60A5FA;
+}
+
+/* Preserve white text on solid brand blue buttons/banners */
+html[data-theme="dark"] .bg-\[\#1D6FD6\] {
+  background-color: #2563EB;
+}
+
+html[data-theme="dark"] .hover\:bg-\[\#1659B3\]:hover {
+  background-color: #1D4ED8;
+}
+
+html[data-theme="dark"] .bg-\[\#155CC0\] {
+  background-color: #1E40AF;
+}
+
+html[data-theme="dark"] .bg-\[\#155CC0\] .bg-white {
+  background-color: #FFFFFF;
+  color: #155CC0;
+}
+
+/* Semantic text in Dark Mode */
+html[data-theme="dark"] .text-\[\#047857\],
+html[data-theme="dark"] .text-\[\#065F46\] {
+  color: #34D399;
+}
+
+html[data-theme="dark"] .text-\[\#B45309\],
+html[data-theme="dark"] .text-\[\#92400E\] {
+  color: #FBBF24;
+}
+
+html[data-theme="dark"] .text-\[\#B91C1C\],
+html[data-theme="dark"] .text-\[\#991B1B\] {
+  color: #F87171;
+}
+
+/* Hover surface refinement in Dark Mode */
+html[data-theme="dark"] .hover\:bg-\[\#F4F8FC\]:hover,
+html[data-theme="dark"] .hover\:bg-\[\#F7FBFF\]:hover,
+html[data-theme="dark"] .hover\:bg-\[\#F0F6FC\]:hover,
+html[data-theme="dark"] .hover\:bg-\[\#F0F7FF\]:hover,
+html[data-theme="dark"] .hover\:bg-\[\#F1F6FC\]:hover {
+  background-color: #1A2E4B;
+}
+
+html[data-theme="dark"] .hover\:bg-\[\#EBF4FF\]:hover,
+html[data-theme="dark"] .hover\:bg-\[\#DCEBFE\]:hover,
+html[data-theme="dark"] .hover\:bg-\[\#E2EEF9\]:hover,
+html[data-theme="dark"] .hover\:bg-\[\#E8F2FE\]:hover {
+  background-color: #213B60;
+}
+
+html[data-theme="dark"] .hover\:bg-\[\#FEF2F2\]:hover {
+  background-color: #3B1820;
+}
+
+html[data-theme="dark"] .hover\:text-\[\#0F233A\]:hover {
+  color: #FFFFFF;
+}
+
+html[data-theme="dark"] .hover\:text-\[\#155CC0\]:hover,
+html[data-theme="dark"] .hover\:text-\[\#1D6FD6\]:hover {
+  color: #93C5FD;
+}
+
+/* Inputs & form controls in Dark Mode */
+html[data-theme="dark"] input:not([type="checkbox"]):not([type="range"]),
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select {
+  background-color: #0D1A2B;
+  color: #EDF4FC;
+  border-color: #2B456A;
+}
+
+html[data-theme="dark"] ::placeholder {
+  color: #6B86A6;
+}
+
+/* Recharts dark mode axes, grids & tooltips */
+html[data-theme="dark"] .recharts-cartesian-grid line {
+  stroke: #223754;
+}
+
+html[data-theme="dark"] .recharts-cartesian-axis-tick-value {
+  fill: #94AECB;
+}
+
+html[data-theme="dark"] .recharts-default-tooltip {
+  background-color: #111F33 !important;
+  border-color: #2B456A !important;
+  color: #EDF4FC !important;
+}
+
+html[data-theme="dark"] .recharts-tooltip-label,
+html[data-theme="dark"] .recharts-legend-item-text {
+  color: #EDF4FC !important;
+}
+
+/* Dark Mode + High Readability synergy */
+html[data-theme="dark"][data-readability="high"] {
+  background-color: #070F1B;
+  color: #FFFFFF;
+}
+
+html[data-theme="dark"][data-readability="high"] .text-\[\#0F233A\] {
+  color: #FFFFFF;
+}
+
+html[data-theme="dark"][data-readability="high"] .text-\[\#455D75\],
+html[data-theme="dark"][data-readability="high"] .text-\[\#688099\] {
+  color: #D2E1F2;
+}
+
+html[data-theme="dark"][data-readability="high"] .border-\[\#DCE7F3\],
+html[data-theme="dark"][data-readability="high"] .border-\[\#E6EFF8\] {
+  border-color: #3D5E8C;
+}
+
+html[data-theme="dark"][data-readability="high"] :is(button, a, input, textarea, select, [tabindex]):focus-visible {
+  outline: 3px solid #60A5FA;
+  outline-offset: 2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -188,12 +454,20 @@ html[data-readability="high"] :is(button, a, input, textarea, select, [tabindex]
     margin: 12mm;
   }
 
-  html, body {
+  html, body, html[data-theme="dark"], html[data-theme="dark"] body {
+    color-scheme: light !important;
     background: #FFFFFF !important;
     color: #0F233A !important;
     font-size: 11px !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+  }
+
+  html[data-theme="dark"] .print-report-sheet,
+  html[data-theme="dark"] .print-report-sheet * {
+    background-color: transparent !important;
+    color: #0F233A !important;
+    border-color: #C6D9ED !important;
   }
 
   .no-print {

@@ -14,6 +14,7 @@ import { useAuthSession } from './hooks/useAuthSession';
 import { useHealthData } from './hooks/useHealthData';
 import { useReadabilityMode } from './hooks/useReadabilityMode';
 import { useSleepShieldWatcher } from './hooks/useSleepShieldWatcher';
+import { useThemeMode } from './hooks/useThemeMode';
 import type { ActiveTab } from './types/reflux';
 
 // Code-split secondary views & modals to keep initial mobile load fast
@@ -69,6 +70,7 @@ export default function App() {
   const handleConsumePromptText = useCallback(() => setPendingLogStarter(null), []);
 
   const { readabilityMode, toggleReadabilityMode } = useReadabilityMode(notify);
+  const { isDarkMode, toggleThemeMode } = useThemeMode(notify);
 
   // Ref callbacks bridge session events to health data reset without circular hooks
   const [resetBridge] = useState(() => ({
@@ -198,6 +200,8 @@ export default function App() {
         </div>
       ) : !showWorkspace ? (
         <LandingPage
+          isDarkMode={isDarkMode}
+          onToggleTheme={toggleThemeMode}
           readabilityMode={readabilityMode}
           onToggleReadability={toggleReadabilityMode}
           onOpenAuth={openAuthModal}
@@ -222,6 +226,8 @@ export default function App() {
           <div className="flex-1 flex flex-col min-w-0 lg:pl-[248px]">
             <AppHeader
               currentLabel={currentNav.label}
+              isDarkMode={isDarkMode}
+              onToggleTheme={toggleThemeMode}
               readabilityMode={readabilityMode}
               onToggleReadability={toggleReadabilityMode}
               isDemoPreview={isDemoPreview}
