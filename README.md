@@ -1,10 +1,11 @@
-# ReflüRehber
+<h1>
+  <img src="public/app-icon.png" alt="ReflüRehber" width="36" height="36" align="absmiddle" />
+  &nbsp;ReflüRehber
+</h1>
 
 **Klasik Reflü (GERD) ve Sessiz Reflü (LPR) için Klinik Kılavuz Odaklı, Halüsinasyonsuz Kişisel Takip Rehberi**
 
-[![Canlı Demo](https://img.shields.io/badge/Canl%C4%B1%20Demo-reflu--rehberi--nu.vercel.app-1D6FD6?style=for-the-badge)](https://reflu-rehberi-nu.vercel.app)
-
-**Canlı Uygulama:** https://reflu-rehberi-nu.vercel.app
+[![Canlı Demo](https://img.shields.io/badge/Canl%C4%B1%20Demo-Uygulamay%C4%B1%20A%C3%A7-1D6FD6?style=for-the-badge&logo=vercel&logoColor=white)](https://reflu-rehberi-nu.vercel.app)
 
 ReflüRehber; mide yanması/ekşimesi gibi klasik reflü (**GERD**) belirtileri ile ses kısıklığı, boğazda gıcık, sık boğaz temizleme ve geniz akıntısı gibi sessiz reflü (**LPR**) belirtilerini birlikte takip etmeyi kolaylaştıran, genel klinik uzlaşıyı kişisel gözlemlerden şeffaf biçimde ayıran modern bir web uygulamasıdır.
 
@@ -34,8 +35,8 @@ ReflüRehber; mide yanması/ekşimesi gibi klasik reflü (**GERD**) belirtileri 
 - **Tek Sayfalık A4 Doktor Raporu & Yerel JSON Yedekleme**
   - A4 yazdırma ve PDF dışa aktarımına uygun hekim görüşmesi özeti.
   - Kullanıcı kontrolünde yerel JSON yedek indirme.
-- **Erişilebilirlik & Çoklu Cihaz Uyumu**
-  - WCAG AAA kontrastlı **Okunabilirlik Modu**, ekran okuyucu / klavye desteği ve 320px küçük telefonlardan masaüstüne tam duyarlı (safe-area uyumlu) arayüz.
+- **Erişilebilirlik, Tema & Çoklu Cihaz Uyumu**
+  - Klinik koyu lacivert **Karanlık / Aydınlık Mod**, WCAG AAA kontrastlı **Okunabilirlik Modu**, ekran okuyucu / klavye desteği ve 320px küçük telefonlardan masaüstüne tam duyarlı (safe-area uyumlu) arayüz.
 
 ---
 
