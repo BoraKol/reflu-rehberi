@@ -1,0 +1,218 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background-color: #F4F8FC;
+    color: #0F233A;
+    scroll-behavior: smooth;
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    overflow-x: clip;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ============================================================================
+   Okunabilirlik Modu (High-Contrast Text & Generous Line Spacing)
+   Preserves the signature light-blue (#F4F8FC / #EBF4FF) & white (#FFFFFF)
+   clinical palette while elevating text/border contrast to WCAG AAA levels.
+   ============================================================================ */
+html[data-readability="high"] {
+  font-size: 17px;
+  background-color: #F2F7FD;
+  color: #051224;
+}
+
+html[data-readability="high"] body {
+  line-height: 1.8;
+  letter-spacing: 0.012em;
+  word-spacing: 0.035em;
+}
+
+/* Generous line heights for prose, cards, lists, and clinical tables */
+html[data-readability="high"] p,
+html[data-readability="high"] li,
+html[data-readability="high"] dd,
+html[data-readability="high"] blockquote,
+html[data-readability="high"] textarea {
+  line-height: 1.85;
+}
+
+html[data-readability="high"] h1,
+html[data-readability="high"] h2,
+html[data-readability="high"] h3,
+html[data-readability="high"] h4 {
+  color: #051224;
+  line-height: 1.38;
+  letter-spacing: -0.005em;
+}
+
+html[data-readability="high"] th,
+html[data-readability="high"] td {
+  line-height: 1.75;
+}
+
+/* Keep single-line controls compact and aligned */
+html[data-readability="high"] button,
+html[data-readability="high"] .whitespace-nowrap {
+  line-height: 1.35;
+}
+
+/* Lift ultra-small helper text inside main content & modals for effortless legibility */
+html[data-readability="high"] main .text-xs,
+html[data-readability="high"] [role="dialog"] .text-xs {
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+html[data-readability="high"] main .text-\[11px\],
+html[data-readability="high"] aside .text-\[11px\],
+html[data-readability="high"] [role="dialog"] .text-\[11px\] {
+  font-size: 0.8125rem;
+  line-height: 1.65;
+}
+
+/* High-contrast cool-navy text ramp on white & light-blue surfaces */
+html[data-readability="high"] .text-\[\#0F233A\] {
+  color: #051224;
+}
+
+html[data-readability="high"] .text-\[\#455D75\],
+html[data-readability="high"] .text-\[\#4A627A\],
+html[data-readability="high"] .text-\[\#334155\],
+html[data-readability="high"] .text-\[\#475569\] {
+  color: #132C47;
+}
+
+html[data-readability="high"] .text-\[\#688099\] {
+  color: #1A3757;
+}
+
+html[data-readability="high"] .text-\[\#8BA0B5\] {
+  color: #214063;
+}
+
+/* Deep royal blue accents — preserves the blue identity at WCAG AAA contrast */
+html[data-readability="high"] .text-\[\#155CC0\],
+html[data-readability="high"] .text-\[\#1D6FD6\] {
+  color: #0A469B;
+}
+
+html[data-readability="high"] .bg-\[\#1D6FD6\] {
+  background-color: #0E50AB;
+}
+
+html[data-readability="high"] .hover\:bg-\[\#1659B3\]:hover {
+  background-color: #093E8A;
+}
+
+/* High-contrast semantic status text on light surfaces */
+html[data-readability="high"] .text-\[\#047857\] {
+  color: #03543F;
+}
+
+html[data-readability="high"] .text-\[\#B45309\],
+html[data-readability="high"] .text-\[\#92400E\] {
+  color: #78350F;
+}
+
+html[data-readability="high"] .text-\[\#B91C1C\] {
+  color: #991B1B;
+}
+
+/* Clearer sky-slate structural borders while preserving soft light-blue/white canvas */
+html[data-readability="high"] .border-\[\#DCE7F3\],
+html[data-readability="high"] .border-\[\#E2EEF9\] {
+  border-color: #8FB3D9;
+}
+
+html[data-readability="high"] .border-\[\#E6EFF8\],
+html[data-readability="high"] .border-\[\#EEF4FA\] {
+  border-color: #A7C4E3;
+}
+
+html[data-readability="high"] .border-\[\#C6D9ED\],
+html[data-readability="high"] .border-\[\#CBE0FA\],
+html[data-readability="high"] .border-\[\#BBD6F7\] {
+  border-color: #6B99CC;
+}
+
+/* Recharts SVG labels & legends in Okunabilirlik Modu */
+html[data-readability="high"] .recharts-cartesian-axis-tick-value {
+  fill: #132C47;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+html[data-readability="high"] .recharts-legend-item-text {
+  color: #051224;
+  font-weight: 500;
+}
+
+/* Prominent keyboard focus rings */
+html[data-readability="high"] :is(button, a, input, textarea, select, [tabindex]):focus-visible {
+  outline: 3px solid #0A469B;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+
+  html, body {
+    background: #FFFFFF !important;
+    color: #0F233A !important;
+    font-size: 11px !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .print-report-sheet {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .print-report-sheet .overflow-x-auto {
+    overflow: visible !important;
+  }
+}

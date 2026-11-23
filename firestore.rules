@@ -1,0 +1,267 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net: Default-deny all unmatched paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Hardened Global Primitives ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedEmail() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isDateStr(val) {
+      return val is string && val.size() == 10 && val.matches('^\\d{4}-\\d{2}-\\d{2}$');
+    }
+
+    function isTimeHHMM(val) {
+      return val is string && val.size() == 5 && val.matches('^([01]\\d|2[0-3]):[0-5]\\d$');
+    }
+
+    // --- Validation Blueprints (Anti-Update-Gap) ---
+    function isValidUserSettings(data, userId) {
+      return data.keys().hasAll(['userId', 'sleepShieldWindowHours', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['userId', 'sleepShieldWindowHours', 'sleepShieldLastMealMs', 'createdAt', 'updatedAt'])
+        && isValidId(data.userId)
+        && data.userId == request.auth.uid
+        && data.userId == userId
+        && (data.sleepShieldWindowHours == 3 || data.sleepShieldWindowHours == 4)
+        && (!('sleepShieldLastMealMs' in data) || data.sleepShieldLastMealMs == null || (data.sleepShieldLastMealMs is int && data.sleepShieldLastMealMs >= 0 && data.sleepShieldLastMealMs <= 9999999999999))
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidFoodList(foods) {
+      return foods is list
+        && foods.size() <= 15
+        && (foods.size() == 0 || (foods[0] is map && foods[0].rawName is string && foods[0].rawName.size() <= 120));
+    }
+
+    function isValidSymptomList(symptoms) {
+      return symptoms is list
+        && symptoms.size() <= 10
+        && (symptoms.size() == 0 || (symptoms[0] is map && symptoms[0].code is string && symptoms[0].code.size() <= 40 && symptoms[0].severity is int && symptoms[0].severity >= 1 && symptoms[0].severity <= 5));
+    }
+
+    function isValidRedFlagSignals(signals) {
+      return signals is list
+        && signals.size() <= 10
+        && (signals.size() == 0 || (signals[0] is map && signals[0].id is string && signals[0].id.size() <= 60));
+    }
+
+    function isValidRefluxLog(data, userId) {
+      return data.keys().hasAll([
+          'userId',
+          'timestamp',
+          'dateStr',
+          'timeHHMM',
+          'rawText',
+          'foods',
+          'symptoms',
+          'isLateMeal',
+          'hasRedFlag',
+          'redFlagUrgency',
+          'source',
+          'createdAt'
+        ])
+        && data.keys().hasOnly([
+          'userId',
+          'timestamp',
+          'dateStr',
+          'timeHHMM',
+          'rawText',
+          'foods',
+          'symptoms',
+          'bedtimeHHMM',
+          'mealToSleepMinutes',
+          'isLateMeal',
+          'hasRedFlag',
+          'redFlagUrgency',
+          'redFlagHeadline',
+          'redFlagGuidance',
+          'redFlagSignals',
+          'source',
+          'notesSummary',
+          'createdAt'
+        ])
+        && isValidId(data.userId)
+        && data.userId == request.auth.uid
+        && data.userId == userId
+        && data.timestamp is string && data.timestamp.size() >= 10 && data.timestamp.size() <= 40
+        && isDateStr(data.dateStr)
+        && isTimeHHMM(data.timeHHMM)
+        && data.rawText is string && data.rawText.size() >= 1 && data.rawText.size() <= 2000
+        && isValidFoodList(data.foods)
+        && isValidSymptomList(data.symptoms)
+        && (!('bedtimeHHMM' in data) || isTimeHHMM(data.bedtimeHHMM))
+        && (!('mealToSleepMinutes' in data) || (data.mealToSleepMinutes is int && data.mealToSleepMinutes >= 0 && data.mealToSleepMinutes <= 720))
+        && data.isLateMeal is bool
+        && data.hasRedFlag is bool
+        && data.redFlagUrgency in ['NONE', 'URGENT_EVALUATION', 'EMERGENCY']
+        && (!('redFlagHeadline' in data) || (data.redFlagHeadline is string && data.redFlagHeadline.size() <= 200))
+        && (!('redFlagGuidance' in data) || (data.redFlagGuidance is string && data.redFlagGuidance.size() <= 600))
+        && (!('redFlagSignals' in data) || isValidRedFlagSignals(data.redFlagSignals))
+        && data.source in ['gemini', 'manual', 'demo']
+        && (!('notesSummary' in data) || (data.notesSummary is string && data.notesSummary.size() <= 200))
+        && data.createdAt is timestamp;
+    }
+
+    function isValidAssessment(data, userId) {
+      return data.keys().hasAll([
+          'userId',
+          'timestamp',
+          'dateStr',
+          'rsiAnswers',
+          'rsiTotal',
+          'rsiSwallowingScore',
+          'gerdqAnswers',
+          'gerdqBurdenScore',
+          'gerdqHeartburnFreqIndex',
+          'gerdqRegurgFreqIndex',
+          'profileType',
+          'createdAt'
+        ])
+        && data.keys().hasOnly([
+          'userId',
+          'timestamp',
+          'dateStr',
+          'rsiAnswers',
+          'rsiTotal',
+          'rsiSwallowingScore',
+          'gerdqAnswers',
+          'gerdqBurdenScore',
+          'gerdqHeartburnFreqIndex',
+          'gerdqRegurgFreqIndex',
+          'profileType',
+          'createdAt'
+        ])
+        && isValidId(data.userId)
+        && data.userId == request.auth.uid
+        && data.userId == userId
+        && data.timestamp is string && data.timestamp.size() >= 10 && data.timestamp.size() <= 40
+        && isDateStr(data.dateStr)
+        && data.rsiAnswers is list && data.rsiAnswers.size() == 9 && data.rsiAnswers[0] is int && data.rsiAnswers[0] >= 0 && data.rsiAnswers[0] <= 5
+        && data.rsiTotal is int && data.rsiTotal >= 0 && data.rsiTotal <= 45
+        && data.rsiSwallowingScore is int && data.rsiSwallowingScore >= 0 && data.rsiSwallowingScore <= 5
+        && data.gerdqAnswers is list && data.gerdqAnswers.size() == 6 && data.gerdqAnswers[0] is int && data.gerdqAnswers[0] >= 0 && data.gerdqAnswers[0] <= 3
+        && data.gerdqBurdenScore is int && data.gerdqBurdenScore >= 0 && data.gerdqBurdenScore <= 18
+        && data.gerdqHeartburnFreqIndex is int && data.gerdqHeartburnFreqIndex >= 0 && data.gerdqHeartburnFreqIndex <= 3
+        && data.gerdqRegurgFreqIndex is int && data.gerdqRegurgFreqIndex >= 0 && data.gerdqRegurgFreqIndex <= 3
+        && data.profileType in ['LPR_DOMINANT', 'GERD_DOMINANT', 'MIXED', 'LOW_SYMPTOM']
+        && data.createdAt is timestamp;
+    }
+
+    function hasValidUserParent(userId) {
+      return exists(/databases/$(database)/documents/users/$(userId))
+        && get(/databases/$(database)/documents/users/$(userId)).data.userId == request.auth.uid;
+    }
+
+    // --- Collection: /users/{userId} ---
+    match /users/{userId} {
+      allow get: if isVerifiedEmail() && isValidId(userId) && isOwner(userId);
+      allow list: if false;
+
+      allow create: if isVerifiedEmail()
+        && isValidId(userId)
+        && isOwner(userId)
+        && isValidUserSettings(incoming(), userId)
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+
+      allow update: if isVerifiedEmail()
+        && isValidId(userId)
+        && isOwner(userId)
+        && isValidUserSettings(incoming(), userId)
+        && incoming().userId == existing().userId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['sleepShieldWindowHours', 'sleepShieldLastMealMs', 'updatedAt'])
+        );
+
+      allow delete: if isVerifiedEmail() && isValidId(userId) && isOwner(userId);
+
+      // --- Subcollection: /users/{userId}/logs/{logId} ---
+      match /logs/{logId} {
+        allow get: if isVerifiedEmail()
+          && isValidId(userId)
+          && isValidId(logId)
+          && isOwner(userId)
+          && existing().userId == request.auth.uid;
+
+        allow list: if isVerifiedEmail()
+          && isOwner(userId)
+          && existing().userId == request.auth.uid;
+
+        allow create: if isVerifiedEmail()
+          && isValidId(userId)
+          && isValidId(logId)
+          && isOwner(userId)
+          && isValidRefluxLog(incoming(), userId)
+          && incoming().createdAt == request.time
+          && hasValidUserParent(userId);
+
+        // Historical health logs are append-only + deletable (no partial update gaps)
+        allow update: if false;
+
+        allow delete: if isVerifiedEmail()
+          && isValidId(userId)
+          && isValidId(logId)
+          && isOwner(userId)
+          && existing().userId == request.auth.uid;
+      }
+
+      // --- Subcollection: /users/{userId}/assessments/{assessmentId} ---
+      match /assessments/{assessmentId} {
+        allow get: if isVerifiedEmail()
+          && isValidId(userId)
+          && isValidId(assessmentId)
+          && isOwner(userId)
+          && existing().userId == request.auth.uid;
+
+        allow list: if isVerifiedEmail()
+          && isOwner(userId)
+          && existing().userId == request.auth.uid;
+
+        allow create: if isVerifiedEmail()
+          && isValidId(userId)
+          && isValidId(assessmentId)
+          && isOwner(userId)
+          && isValidAssessment(incoming(), userId)
+          && incoming().createdAt == request.time
+          && hasValidUserParent(userId);
+
+        // Screening assessments are immutable historical snapshots + deletable
+        allow update: if false;
+
+        allow delete: if isVerifiedEmail()
+          && isValidId(userId)
+          && isValidId(assessmentId)
+          && isOwner(userId)
+          && existing().userId == request.auth.uid;
+      }
+    }
+  }
+}

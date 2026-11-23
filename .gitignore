@@ -1,0 +1,28 @@
+# Dependencies & build outputs
+node_modules/
+build/
+dist/
+coverage/
+
+# Environment & secret configuration files
+.env
+.env.*
+!.env.example
+firebase-applet-config.json
+*service-account*.json
+*.pem
+*.key
+*.p12
+
+# Local tool / platform caches & logs
+.aistudio/
+.firebase/
+.playwright-cli/
+*.log
+firebase-debug.log*
+firestore-debug.log*
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+desktop.ini

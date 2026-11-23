@@ -1,0 +1,237 @@
+{
+  "entities": {
+    "UserSettings": {
+      "title": "UserSettings",
+      "description": "Authenticated user's private ReflüRehber settings and meal-sleep shield timer state (no PII stored in Firestore).",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Owner Firebase Auth UID matching the document path.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "sleepShieldWindowHours": {
+          "type": "integer",
+          "description": "Meal-to-sleep shield window duration in hours (3 for GERD ACG, 4 for LPR).",
+          "enum": [3, 4]
+        },
+        "sleepShieldLastMealMs": {
+          "type": "integer",
+          "description": "Optional epoch milliseconds of last finished meal, or null when inactive."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp set on creation."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp updated on every settings mutation."
+        }
+      },
+      "required": ["userId", "sleepShieldWindowHours", "createdAt", "updatedAt"]
+    },
+    "RefluxLogDoc": {
+      "title": "RefluxLogDoc",
+      "description": "Private meal, symptom, and red-flag observation log owned strictly by a single authenticated user.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Owner Firebase Auth UID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Local ISO-like event timestamp.",
+          "minLength": 10,
+          "maxLength": 40
+        },
+        "dateStr": {
+          "type": "string",
+          "description": "Event calendar date YYYY-MM-DD.",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "minLength": 10,
+          "maxLength": 10
+        },
+        "timeHHMM": {
+          "type": "string",
+          "description": "Event 24h time HH:MM.",
+          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+          "minLength": 5,
+          "maxLength": 5
+        },
+        "rawText": {
+          "type": "string",
+          "description": "User's verbatim Turkish meal or symptom entry.",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "foods": {
+          "type": "array",
+          "description": "Bounded list (<= 15) of verified or unverified custom food observations."
+        },
+        "symptoms": {
+          "type": "array",
+          "description": "Bounded list (<= 10) of mapped GERD/LPR symptoms with 1-5 severity."
+        },
+        "bedtimeHHMM": {
+          "type": "string",
+          "description": "Optional bedtime HH:MM.",
+          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+          "maxLength": 5
+        },
+        "mealToSleepMinutes": {
+          "type": "integer",
+          "description": "Optional interval between meal and bedtime in minutes (0..720)."
+        },
+        "isLateMeal": {
+          "type": "boolean",
+          "description": "True if meal occurred at/after 21:00."
+        },
+        "hasRedFlag": {
+          "type": "boolean",
+          "description": "True if deterministic Red Flag Guardrail matched an alarm symptom."
+        },
+        "redFlagUrgency": {
+          "type": "string",
+          "enum": ["NONE", "URGENT_EVALUATION", "EMERGENCY"],
+          "description": "Deterministic urgency tier."
+        },
+        "redFlagHeadline": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "redFlagGuidance": {
+          "type": "string",
+          "maxLength": 600
+        },
+        "redFlagSignals": {
+          "type": "array",
+          "description": "Bounded list (<= 10) of detected alarm signal descriptors."
+        },
+        "source": {
+          "type": "string",
+          "enum": ["gemini", "manual", "demo"]
+        },
+        "notesSummary": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp enforced on creation."
+        }
+      },
+      "required": [
+        "userId",
+        "timestamp",
+        "dateStr",
+        "timeHHMM",
+        "rawText",
+        "foods",
+        "symptoms",
+        "isLateMeal",
+        "hasRedFlag",
+        "redFlagUrgency",
+        "source",
+        "createdAt"
+      ]
+    },
+    "AssessmentDoc": {
+      "title": "AssessmentDoc",
+      "description": "Private Belafsky RSI (9 items) and GerdQ weekly check (6 items) assessment owned strictly by a single authenticated user.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "timestamp": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 40
+        },
+        "dateStr": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "minLength": 10,
+          "maxLength": 10
+        },
+        "rsiAnswers": {
+          "type": "array",
+          "description": "Exactly 9 integer answers (0..5)."
+        },
+        "rsiTotal": {
+          "type": "integer",
+          "description": "Sum of RSI answers (0..45)."
+        },
+        "rsiSwallowingScore": {
+          "type": "integer",
+          "description": "RSI item 4 swallowing score (0..5)."
+        },
+        "gerdqAnswers": {
+          "type": "array",
+          "description": "Exactly 6 integer frequency indices (0..3)."
+        },
+        "gerdqBurdenScore": {
+          "type": "integer",
+          "description": "Weekly GERD burden score (0..18)."
+        },
+        "gerdqHeartburnFreqIndex": {
+          "type": "integer",
+          "description": "Heartburn frequency index (0..3)."
+        },
+        "gerdqRegurgFreqIndex": {
+          "type": "integer",
+          "description": "Regurgitation frequency index (0..3)."
+        },
+        "profileType": {
+          "type": "string",
+          "enum": ["LPR_DOMINANT", "GERD_DOMINANT", "MIXED", "LOW_SYMPTOM"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp enforced on creation."
+        }
+      },
+      "required": [
+        "userId",
+        "timestamp",
+        "dateStr",
+        "rsiAnswers",
+        "rsiTotal",
+        "rsiSwallowingScore",
+        "gerdqAnswers",
+        "gerdqBurdenScore",
+        "gerdqHeartburnFreqIndex",
+        "gerdqRegurgFreqIndex",
+        "profileType",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserSettings" },
+      "description": "Per-user private container document holding meal-sleep shield configuration (no PII)."
+    },
+    "/users/{userId}/logs/{logId}": {
+      "schema": { "$ref": "#/entities/RefluxLogDoc" },
+      "description": "Private health log entries strictly scoped to authenticated owner {userId}."
+    },
+    "/users/{userId}/assessments/{assessmentId}": {
+      "schema": { "$ref": "#/entities/AssessmentDoc" },
+      "description": "Private Belafsky RSI and weekly GERD screening records strictly scoped to authenticated owner {userId}."
+    }
+  }
+}
