@@ -8,7 +8,7 @@ import {
   getGeminiClient,
   isAllowedOrigin,
   isProductionEnv,
-} from './api/_parseLogCore';
+} from './api/_parseLogCore.js';
 
 dotenv.config({ path: '.env.local' });
 dotenv.config();

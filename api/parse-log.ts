@@ -2,7 +2,7 @@ import {
   checkRateLimit,
   executeParseLog,
   isAllowedOrigin,
-} from './_parseLogCore';
+} from './_parseLogCore.js';
 
 interface VercelRequestLike {
   method?: string;

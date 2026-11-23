@@ -1,4 +1,4 @@
-import { getGeminiClient } from './_parseLogCore';
+import { getGeminiClient } from './_parseLogCore.js';
 
 interface VercelRequestLike {
   method?: string;
